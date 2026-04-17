@@ -16,6 +16,10 @@ export default class TipoCadastroCliente extends Processo {
                 this.processo = new CadastroClienteTitular()
                 this.processo.processar()
                 break
+            case 2:
+                this.processo = new CadastroClienteTitular()
+                this.processo.processar()
+                break
             default:
                 console.log('Opção não entendida :(')
         }
