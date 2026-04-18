@@ -4,28 +4,37 @@ import ImpressaorCliente from "../impressores/impressorCliente";
 import Impressor from "../interfaces/impressor";
 import Cliente from "../modelos/cliente";
 
-export default class ListagemTitulares extends Processo {
+export default class ListagemDependentes extends Processo {
     private clientes: Cliente[]
     private impressor!: Impressor
+
     constructor() {
         super()
         this.clientes = Armazem.InstanciaUnica.Clientes
     }
+
     processar(): void {
         console.clear()
-        console.log('Iniciando a listagem dos clientes titulares...')
-        this.clientes.forEach(cliente => {
-            if (this.titular(cliente)) {
-                this.impressor = new ImpressaorCliente(cliente)
-                console.log(this.impressor.imprimir())
-            }
-        })
-    }
-    private titular(cliente: Cliente): boolean {
-        let verificacao = false
-        if (cliente.Titular == undefined) {
-            verificacao = true
+        console.log('Listagem de dependentes por titular')
+
+        const nome = this.entrada.receberTexto('Digite o nome do titular: ')
+
+        const titular = this.clientes.find(c => c.Nome === nome)
+
+        if (!titular) {
+            console.log('Cliente não encontrado.')
+            return
         }
-        return verificacao
+
+        if (titular.Dependentes.length === 0) {
+            console.log('Este cliente não possui dependentes.')
+            return
+        }
+
+        console.log(`Dependentes de ${titular.Nome}:`)
+        titular.Dependentes.forEach(dep => {
+            this.impressor = new ImpressaorCliente(dep)
+            console.log(this.impressor.imprimir())
+        })
     }
 }
